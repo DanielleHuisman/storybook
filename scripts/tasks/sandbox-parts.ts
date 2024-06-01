@@ -209,7 +209,7 @@ function addEsbuildLoaderToStories(mainConfig: ConfigFile) {
           },
         },
         // Handle MDX files per the addon-docs presets (ish)
-        {        
+        {
           test: /template-stories\\/.*\\.mdx$/,
           exclude: /\\.stories\\.mdx$/,
           use: [

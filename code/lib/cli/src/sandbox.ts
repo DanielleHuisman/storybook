@@ -61,7 +61,7 @@ export const sandbox = async ({
       This version is behind the latest release, which is: ${chalk.bold(latestVersion)}!
       You likely ran the init command through npx, which can use a locally cached version, to get the latest please run:
       ${chalk.bold('npx storybook@latest sandbox')}
-      
+
       You may want to CTRL+C to stop, and run with the latest version instead.
     `),
     longInitTime: chalk.yellow(
@@ -201,7 +201,7 @@ export const sandbox = async ({
     logger.log(`📦 Downloading sandbox template (${chalk.bold(downloadType)})...`);
     try {
       // Download the sandbox based on subfolder "after-storybook" and selected branch
-      const gitPath = `github:storybookjs/sandboxes/${templateId}/${downloadType}#${branch}`;
+      const gitPath = `github:DanielleHuisman/sandboxes/${templateId}/${downloadType}#${branch}`;
       await downloadTemplate(gitPath, {
         force: true,
         dir: templateDestination,

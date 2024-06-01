@@ -24,6 +24,7 @@ export const frameworkToRenderer: Record<
   'vue3-webpack5': 'vue3',
   'web-components-vite': 'web-components',
   'web-components-webpack5': 'web-components',
+  'leptos-trunk': 'leptos',
   // renderers
   html: 'html',
   preact: 'preact',
@@ -33,4 +34,5 @@ export const frameworkToRenderer: Record<
   svelte: 'svelte',
   vue3: 'vue3',
   'web-components': 'web-components',
+  leptos: 'leptos',
 };

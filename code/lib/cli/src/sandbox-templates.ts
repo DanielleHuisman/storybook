@@ -84,9 +84,10 @@ export type Template = {
 };
 
 type BaseTemplates = Template & {
-  name: `${string} ${`v${number}` | 'Latest' | 'Prerelease'} (${'Webpack' | 'Vite'} | ${
+  name: `${string} ${`v${number}` | 'Latest' | 'Prerelease'} (${'Webpack' | 'Vite' | 'Trunk'} | ${
     | 'JavaScript'
-    | 'TypeScript'})`;
+    | 'TypeScript'
+    | 'Rust'})`;
 };
 
 const baseTemplates = {
@@ -481,6 +482,19 @@ const baseTemplates = {
       builder: '@storybook/builder-webpack5',
     },
   },
+  'leptos-trunk/default-rs': {
+    name: 'Leptos Latest (Trunk | Rust)',
+    script:
+      'cargo generate --git https://github.com/leptos-community/start-csr --name {{beforeDir}} && echo "{\\"name\\":\\"{{beforeDir}}\\",\\"scripts\\":{}}" > {{beforeDir}}/package.json',
+    expected: {
+      framework: '@storybook/leptos-trunk',
+      renderer: '@storybook/leptos',
+      builder: '@storybook/builder-trunk',
+    },
+    // TODO: remove this once leptos-trunk framework is released
+    inDevelopment: true,
+    skipTasks: ['e2e-tests-dev', 'bench'],
+  },
 } satisfies Record<string, BaseTemplates>;
 
 /**
@@ -642,6 +656,7 @@ export const daily: TemplateKey[] = [
   'html-vite/default-js',
   'internal/react16-webpack',
   'internal/react18-webpack-babel',
+  'leptos-trunk/default-rs',
 ];
 
 export const templatesByCadence = { normal, merged, daily };

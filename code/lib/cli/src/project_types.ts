@@ -40,6 +40,7 @@ export const SUPPORTED_RENDERERS: SupportedRenderers[] = [
   'svelte',
   'qwik',
   'solid',
+  'leptos',
 ];
 
 export enum ProjectType {
@@ -63,11 +64,13 @@ export enum ProjectType {
   SERVER = 'SERVER',
   NX = 'NX',
   SOLID = 'SOLID',
+  LEPTOS = 'LEPTOS',
 }
 
 export enum CoreBuilder {
   Webpack5 = 'webpack5',
   Vite = 'vite',
+  Trunk = 'trunk',
 }
 
 export enum CoreWebpackCompilers {
@@ -83,6 +86,7 @@ export const compilerNameToCoreCompiler: Record<string, CoreWebpackCompilers> = 
 export const builderNameToCoreBuilder: Record<string, CoreBuilder> = {
   '@storybook/builder-webpack5': CoreBuilder.Webpack5,
   '@storybook/builder-vite': CoreBuilder.Vite,
+  '@storybook/builder-trunk': CoreBuilder.Trunk,
 };
 
 // The `& {}` bit allows for auto-complete, see: https://github.com/microsoft/TypeScript/issues/29729
@@ -92,6 +96,7 @@ export enum SupportedLanguage {
   JAVASCRIPT = 'javascript',
   TYPESCRIPT_3_8 = 'typescript-3-8',
   TYPESCRIPT_4_9 = 'typescript-4-9',
+  RUST = 'rust',
 }
 
 export type TemplateMatcher = {
@@ -212,6 +217,14 @@ export const supportedTemplates: TemplateConfiguration[] = [
     preset: ProjectType.SOLID,
     dependencies: ['solid-js'],
     matcherFunction: ({ dependencies }) => {
+      return dependencies?.every(Boolean) ?? true;
+    },
+  },
+  {
+    preset: ProjectType.LEPTOS,
+    dependencies: [],
+    matcherFunction: ({ dependencies }) => {
+      console.log('PANNEKOEK MATCHER LEPTOS', dependencies);
       return dependencies?.every(Boolean) ?? true;
     },
   },

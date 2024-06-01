@@ -19,6 +19,7 @@ import { commandLog, HandledError } from '@storybook/core-common';
 
 const viteConfigFiles = ['vite.config.ts', 'vite.config.js', 'vite.config.mjs'];
 const webpackConfigFiles = ['webpack.config.js'];
+const trunkConfigFiles = ['Trunk.toml'];
 
 const hasDependency = (
   packageJson: PackageJsonWithMaybeDeps,
@@ -112,6 +113,7 @@ export function detectFrameworkPreset(
 export async function detectBuilder(packageManager: JsPackageManager, projectType: ProjectType) {
   const viteConfig = findUp.sync(viteConfigFiles);
   const webpackConfig = findUp.sync(webpackConfigFiles);
+  const trunkConfig = findUp.sync(trunkConfigFiles);
   const dependencies = await packageManager.getAllDependencies();
 
   if (viteConfig || (dependencies['vite'] && dependencies['webpack'] === undefined)) {
@@ -125,7 +127,12 @@ export async function detectBuilder(packageManager: JsPackageManager, projectTyp
     return CoreBuilder.Webpack5;
   }
 
-  // Fallback to Vite or Webpack based on project type
+  if (trunkConfig) {
+    commandLog('Detected Trunk project. Setting builder to Trunk')();
+    return CoreBuilder.Trunk;
+  }
+
+  // Fallback based on project type
   switch (projectType) {
     case ProjectType.REACT_SCRIPTS:
     case ProjectType.ANGULAR:
@@ -133,6 +140,8 @@ export async function detectBuilder(packageManager: JsPackageManager, projectTyp
     case ProjectType.NEXTJS:
     case ProjectType.EMBER:
       return CoreBuilder.Webpack5;
+    case ProjectType.LEPTOS:
+      return CoreBuilder.Trunk;
     default:
       const { builder } = await prompts(
         {
@@ -143,6 +152,7 @@ export async function detectBuilder(packageManager: JsPackageManager, projectTyp
           choices: [
             { title: 'Vite', value: CoreBuilder.Vite },
             { title: 'Webpack 5', value: CoreBuilder.Webpack5 },
+            { title: 'Trunk', value: CoreBuilder.Trunk },
           ],
         },
         {
@@ -165,6 +175,10 @@ export async function detectPnp() {
 }
 
 export async function detectLanguage(packageManager: JsPackageManager) {
+  if (fs.existsSync('Cargo.toml')) {
+    return SupportedLanguage.RUST;
+  }
+
   let language = SupportedLanguage.JAVASCRIPT;
 
   if (fs.existsSync('jsconfig.json')) {
@@ -211,6 +225,11 @@ export async function detect(
   packageManager: JsPackageManager,
   options: { force?: boolean; html?: boolean } = {}
 ) {
+  if (findUp.sync('Cargo.toml')) {
+    // TODO: use Cargo dependencies to determine project type
+    return ProjectType.LEPTOS;
+  }
+
   const packageJson = await packageManager.retrievePackageJson();
 
   if (!packageJson) {

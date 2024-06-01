@@ -157,6 +157,7 @@ export const frameworkToDefaultBuilder: Record<SupportedFrameworks, CoreBuilder>
   'vue3-webpack5': CoreBuilder.Webpack5,
   'web-components-vite': CoreBuilder.Vite,
   'web-components-webpack5': CoreBuilder.Webpack5,
+  'leptos-trunk': CoreBuilder.Trunk,
 };
 
 export async function copyTemplateFiles({
@@ -172,6 +173,7 @@ export async function copyTemplateFiles({
     [SupportedLanguage.JAVASCRIPT]: 'js',
     [SupportedLanguage.TYPESCRIPT_3_8]: 'ts-3-8',
     [SupportedLanguage.TYPESCRIPT_4_9]: 'ts-4-9',
+    [SupportedLanguage.RUST]: 'rs',
   };
   const templatePath = async () => {
     const baseDir = await getRendererDir(packageManager, renderer);
